@@ -16,30 +16,61 @@ var myGamePiece;
 var myObstacles = [];
 var myScore;
 
+// Background image
+var bgReady = false;
+var bgImage = new Image();
+bgImage.onload = function () {
+	bgReady = true;
+	console.log('loaded bg');
+};
+bgImage.src = "images/background.png";
+
+
+//bird image
+var birdReady = false;
+var birdImage = new Image();
+birdImage.onload = function () {
+	 birdReady = true;
+	console.log('loaded bird');
+};
+birdImage.src = "images/bird.jpg";
+
+
+
+
 function startGame() {
-    myGamePiece = new component(30, 30, "red", 10, 120);
+    myGamePiece = new component(30, 30, birdImage.src, 10, 120, "image");
     myGamePiece.gravity = 0.05;
     myScore = new component("30px", "Consolas", "black", 280, 40, "text");
     myGameArea.start();
 }
 
+
 var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
-        this.canvas.width = 480;
-        this.canvas.height = 270;
+        this.canvas.width = 600;
+        this.canvas.height = 300;
         this.context = this.canvas.getContext("2d");
+		if (bgReady) {
+				this.context.drawImage(bgImage, 0, 0);
+			};
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
         this.interval = setInterval(updateGameArea, 20);
         },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		this.context.drawImage(bgImage, 0, -100);
     }
 }
 
 function component(width, height, color, x, y, type) {
     this.type = type;
+	if (type == "image") {
+	    this.image = new Image();
+	    this.image.src = color;
+  	}
     this.score = 0;
     this.width = width;
     this.height = height;
@@ -55,6 +86,9 @@ function component(width, height, color, x, y, type) {
             ctx.font = this.width + " " + this.height;
             ctx.fillStyle = color;
             ctx.fillText(this.text, this.x, this.y);
+        } else if (this.type == "image") {
+			console.log("type is bird");
+            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         } else {
             ctx.fillStyle = color;
             ctx.fillRect(this.x, this.y, this.width, this.height);
