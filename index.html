@@ -20,7 +20,6 @@ var bgReady = false;
 var bgImage = new Image();
 bgImage.onload = function () {
 	bgReady = true;
-	console.log('loaded bg');
 };
 bgImage.src = "images/background.png";
 
@@ -30,15 +29,32 @@ var birdReady = false;
 var birdImage = new Image();
 birdImage.onload = function () {
 	 birdReady = true;
-	console.log('loaded bird');
 };
 birdImage.src = "images/bird.png";
+
+//pip image
+var pipeReady = false;
+var pipeImage = new Image();
+birdImage.onload = function () {
+	 pipeReady = true;
+};
+pipeImage.src = "images/pipe.png";
+
+
+//rotatedpipe image
+var rotatedpipeReady = false;
+var rotatedpipeImage = new Image();
+birdImage.onload = function () {
+	 rotatedpipeReady = true;
+};
+rotatedpipeImage.src = "images/rotatedpipe.png";
+
 
 
 
 
 function startGame() {
-    myGamePiece = new component(30, 30, birdImage.src, 10, 120, "image");
+    myGamePiece = new component(25, 20, birdImage.src, 10, 120, "image");
     myGamePiece.gravity = 0.05;
     myScore = new component("30px", "Consolas", "black", 280, 40, "text");
     myGameArea.start();
@@ -86,7 +102,6 @@ function component(width, height, color, x, y, type) {
             ctx.fillStyle = color;
             ctx.fillText(this.text, this.x, this.y);
         } else if (this.type == "image") {
-			console.log("type is bird");
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         } else {
             ctx.fillStyle = color;
@@ -137,17 +152,18 @@ function updateGameArea() {
         maxHeight = 200;
         height = Math.floor(Math.random()*(maxHeight-minHeight+1)+minHeight);
         minGap = 50;
-        maxGap = 200;
+        maxGap = 150;
         gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
-        myObstacles.push(new component(10, height, "green", x, 0));
-        myObstacles.push(new component(10, x - height - gap, "green", x, height + gap));
+
+        myObstacles.push(new component(40, 250, rotatedpipeImage.src, x, -height, "image"));
+        myObstacles.push(new component(40, 250, pipeImage.src, x, -height + 250 + gap, "image"));
     }
     for (i = 0; i < myObstacles.length; i += 1) {
         myObstacles[i].x += -1;
         myObstacles[i].update();
     }
 
-    myScore.text="SCORE: " + myGameArea.frameNo;
+    myScore.text="SCORE: " + myGameArea.frameNo /10;
     myScore.update();
     myGamePiece.newPos();
     myGamePiece.update();
