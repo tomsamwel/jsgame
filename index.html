@@ -11,7 +11,6 @@ canvas {
 </head>
 <body onload="startGame()">
 <script>
-
 var myGamePiece;
 var myObstacles = [];
 var myScore;
@@ -123,7 +122,6 @@ function component(width, height, color, x, y, type) {
         return crash;
     }
 }
-
 function updateGameArea() {
     var x, height, gap, minHeight, maxHeight, minGap, maxGap;
     for (i = 0; i < myObstacles.length; i += 1) {
@@ -148,12 +146,12 @@ function updateGameArea() {
         myObstacles[i].x += -1;
         myObstacles[i].update();
     }
+
     myScore.text="SCORE: " + myGameArea.frameNo;
     myScore.update();
     myGamePiece.newPos();
     myGamePiece.update();
 }
-
 function everyinterval(n) {
     if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
     return false;
@@ -162,10 +160,26 @@ function everyinterval(n) {
 function accelerate(n) {
     myGamePiece.gravity = n;
 }
+
+function restartGame() {
+    myGameArea.clear();
+    startGame();
+}
+
+document.addEventListener('keyup', function(event) {
+    if(event.keyCode == 32) {
+        accelerate(0.1);
+    }
+});
+
+document.addEventListener('keydown', function(event) {
+    if(event.keyCode == 32) {
+        accelerate(-0.2);
+    }
+});
+
 </script>
 <br>
-<button onmousedown="accelerate(-0.2)" onmouseup="accelerate(0.05)">ACCELERATE</button>
-<p>Use the ACCELERATE button to stay in the air</p>
-<p>How long can you stay alive?</p>
+<button onclick="restartGame();">Restart</button>
 </body>
 </html>
